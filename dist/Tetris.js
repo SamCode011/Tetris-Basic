@@ -56,11 +56,11 @@ const tTetromino = [
   let currentPosition = 4
   let currentRotation = 0
 
- /*  console.log(theTetrominoes[0][0]) */
+  console.log(theTetrominoes[0][0])
 
  //select a tetromino and its first rotation 
-  let ramdon  =Math.floor(Math.random()*theTetrominoes.length)
-  let current =theTetrominoes[ramdon][currentRotation]
+  let random  =Math.floor(Math.random()*theTetrominoes.length)
+  let current =theTetrominoes[random][currentRotation]
 
   //draw the tetromino
   function draw() {
@@ -81,26 +81,21 @@ const tTetromino = [
   }
 
   //assign functions to keycodes 
-  let canRotate = null ;
   function control(e) {
-      if(e.key === "ArrowRight"){
+    if (e.key === "ArrowLeft") {
+        moveleft();
+      } else if (e.key === "ArrowUp") {
+        rotate();
+      } else if (e.key === "ArrowRight") {
         moveright();
-        canRotate="right";
-      }else if (e.key === "ArrowUp"){
-      rotate();
-      canRotate =null;
-      }else if (e.key === "ArrowLeft"){
-      moveleft();
-      canRotate= "left";
-      }else if (e.key === "ArrowDown"){
-      moveDown();
-      canRotate="down";
-  }
+      } else if (e.key === "ArrowDown") {
+        movedown();
+      }
 }
 document.addEventListener('keyup',control)
 
 //move down function
-function moveDown() {
+function movedown() {
     currentPosition += width
     draw()
     undraw()
@@ -109,11 +104,11 @@ function moveDown() {
 //freeze function
 
 function freeze() {
-    if(current.some(index => squares[currentPosition + index +width].classList.contains('taken'))) {
+    if(current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
         current.forEach(index => squares[currentPosition + index].classList.add('taken'))
         //start a new tetromino falling
         random = nextRandom
-        nextRandom =Math.floor(Math.ramdon() * theTetrominoes.length)
+        nextRandom =Math.floor(Math.random() * theTetrominoes.length)
         current =theTetrominoes[random][currentPosition]
         currentPosition = 4
         draw()
@@ -133,7 +128,7 @@ function moveleft() {
     draw()
 }
 
-function moveRight() {
+function moveright() {
     undraw()
     const isAtRightEdge = current.some(index => (currentPosition + index) % width === width -1)
     if(!isAtRightEdge) currentPosition +=1
@@ -221,7 +216,26 @@ function moveRight() {
   function addScore() {
     for (let i=0;i<199;i +=width) {
         const row = [i,i+1,i+2,i+3,i+4,i+5,i+6,i+7,i+8,i+9]
-        
+        if( row.every(index => squares[index].classList.contains('taken'))){
+            score +=10
+            scoreDisplay.innerHTML =score
+            row.forEach(index => {
+                squares[index].classList.remove('taken')
+                squares[index].classList.remove('tetromino')
+                squares[index].style.backgroundColor = ''
+            })
+            const squaresRemoved =squares.splice(i , width)
+            squares = squaresRemoved.concat(squares)
+            squares.forEach(cell => grid.appendChild(cell))
+        }
     }
   }
+  //game over 
+  function gameOver() {
+    if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+        scoreDisplay.innerHTML = 'end'
+        clearInterval(timerId)
+        }
+    }
+  
 })
