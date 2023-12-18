@@ -106,11 +106,13 @@ function movedown() {
 function freeze() {
     if(current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
         current.forEach(index => squares[currentPosition + index].classList.add('taken'))
+
         //start a new tetromino falling
         random = nextRandom
         nextRandom = Math.floor(Math.random() * theTetrominoes.length)
         current = theTetrominoes[random][currentRotation]
         currentPosition = 4
+
         draw()
         displayShape()
         addScore()
@@ -194,12 +196,14 @@ function moveright() {
       square.classList.remove('tetromino')
       square.style.backgroundColor = ''
     })
-    upNextTetrominoes[nextRandom].forEach( index => {
-      displaySquares[displayIndex + index].classList.add('tetromino')
-      displaySquares[displayIndex + index].style.backgroundColor = colors[nextRandom]
-    })
+    upNextTetrominoes[nextRandom].forEach(index => {
+        const currentIndex = displayIndex + index;
+        if (currentIndex < displaySquares.length) {
+          displaySquares[currentIndex].classList.add('tetromino')
+          displaySquares[currentIndex].style.backgroundColor = colors[nextRandom]
+   }
+ })
   }
-
   //add functionality to the button
   startBtn.addEventListener('click', () => {
     if (timerId) {
@@ -207,7 +211,7 @@ function moveright() {
       timerId = null
     } else {
       draw()
-      timerId = setInterval(moveDown, 1000)
+      timerId = setInterval(movedown, 1000)
       nextRandom = Math.floor(Math.random()*theTetrominoes.length)
       displayShape()
     }
@@ -220,7 +224,9 @@ function moveright() {
 
       if(row.every(index => squares[index].classList.contains('taken'))) {
         score +=10
-        scoreDisplay.innerHTML = score
+        if (scoreDisplay) {  
+            scoreDisplay.innerHTML = score
+        }
         row.forEach(index => {
           squares[index].classList.remove('taken')
           squares[index].classList.remove('tetromino')
