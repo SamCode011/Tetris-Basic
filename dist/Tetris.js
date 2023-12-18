@@ -96,9 +96,9 @@ document.addEventListener('keyup',control)
 
 //move down function
 function movedown() {
+    undraw()
     currentPosition += width
     draw()
-    undraw()
     freeze()
 }
 //freeze function
@@ -108,8 +108,8 @@ function freeze() {
         current.forEach(index => squares[currentPosition + index].classList.add('taken'))
         //start a new tetromino falling
         random = nextRandom
-        nextRandom =Math.floor(Math.random() * theTetrominoes.length)
-        current =theTetrominoes[random][currentPosition]
+        nextRandom = Math.floor(Math.random() * theTetrominoes.length)
+        current = theTetrominoes[random][currentRotation]
         currentPosition = 4
         draw()
         displayShape()
@@ -194,9 +194,9 @@ function moveright() {
         square.classList.remove('tetromino')
         square.style.backgroundColor = ''
     })
-    upNextTetrominoes[nextRandom].forEach ( index => {
+    upNextTetrominoes[nextRandom].forEach( index => {
         displaySquares[displayIndex + index].classList.add('tetromino')
-        displaySquares[displayIndex +index].style.backgroundColor = colors[nextRandom]
+        displaySquares[displayIndex + index].style.backgroundColor = colors[nextRandom]
     })
   }
   //add funcionality to the buttom 
@@ -205,8 +205,8 @@ function moveright() {
         clearInterval(timerId)
         timerId = null
     } else {
-        draw ()
-        timerId =setInterval(moveDown , 1000)
+        draw()
+        timerId =setInterval(movedown , 1000)
         nextRandom = Math.floor(Math.random()*theTetrominoes.length)
         displayShape()
     }
@@ -216,7 +216,7 @@ function moveright() {
   function addScore() {
     for (let i=0;i<199;i +=width) {
         const row = [i,i+1,i+2,i+3,i+4,i+5,i+6,i+7,i+8,i+9]
-        if( row.every(index => squares[index].classList.contains('taken'))){
+        if(row.every(index => squares[index].classList.contains('taken'))){
             score +=10
             scoreDisplay.innerHTML =score
             row.forEach(index => {
