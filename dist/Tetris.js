@@ -70,3 +70,46 @@ const tTetromino = [
     })
 
   }
+
+  //assign functions to keycodes 
+  let canRotate = null ;
+  function control(e) {
+      if(e.key === "ArrowRight"){
+        moveright();
+        canRotate="right";
+      }else if (e.key === "ArrowUp"){
+      rotate();
+      canRotate =null;
+      }else if (e.key === "ArrowLeft"){
+      moveleft();
+      canRotate= "left";
+      }else if (e.key === "ArrowDown"){
+      moveDown();
+      canRotate="down";
+  }
+}
+document.addEventListener('keyup',control)
+
+//move down function
+function moveDown() {
+    currentPosition += width
+    draw()
+    freeze()
+}
+//freeze function
+
+function freeze() {
+    if(current.some(index => squares[currentPosition + index +width].classList.contains('taken'))) {
+        current.forEach(index => squares[currentPosition + index].classList.add('taken'))
+        //start a new tetromino falling
+        random = nextRandom
+        nextRandom =Math.floor(Math.ramdon() * theTetrominoes.length)
+        current =theTetrominoes[random][currentPosition]
+        currentPosition = 4
+        draw()
+        displayShape()
+        addScore()
+        gameOver()
+        }
+
+}
