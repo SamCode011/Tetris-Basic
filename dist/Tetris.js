@@ -204,5 +204,14 @@ function moveRight() {
         displaySquares[displayIndex +index].style.backgroundColor = colors[nextRandom]
     })
   }
-  
+  //add funcionality to the buttom 
+  startBtn.addEventListener('click',() => {
+    if (timerId) {
+        clearInterval(timerId)
+        timerId = null
+    } else {
+        draw ()
+        timerId =srt
+    }
+  })
 })
