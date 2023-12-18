@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded',() => {
         'green',
         'blue'
      ]
-})
+
 
 const lTetromino = [
     [1,width+1,width*2+1,2],
@@ -70,6 +70,15 @@ const tTetromino = [
     })
 
   }
+  //undraw the tetromino
+  function undraw() {
+    current.forEach(index => {
+        squares[currentPosition + index].classList.remove('tetromino')
+        squares[currentPosition + index].style.backgroundColor = ''
+    })
+
+    
+  }
 
   //assign functions to keycodes 
   let canRotate = null ;
@@ -94,6 +103,7 @@ document.addEventListener('keyup',control)
 function moveDown() {
     currentPosition += width
     draw()
+    undraw()
     freeze()
 }
 //freeze function
@@ -111,5 +121,61 @@ function freeze() {
         addScore()
         gameOver()
         }
-
 }
+//move the tetromino left ,unless is at the edge or there is a blockage
+function moveleft() {
+    undraw()
+    const isAtLeftEdge = current.some(index => (currentPosition + index) % width ===0)
+    if(!isAtLeftEdge) currentPosition -=1
+    if(current.some(index => squares[currentPosition +index].classList.contains('taken'))) {
+        currentPosition +=1
+    }
+    draw()
+}
+
+function moveRight() {
+    undraw()
+    const isAtRightEdge = current.some(index => (currentPosition + index) % width === width -1)
+    if(!isAtRightEdge) currentPosition +=1
+    if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+      currentPosition -=1
+    }
+    draw()
+  }
+
+  //fix rotation of tetrominos a the edge
+  function isAtRight() {
+    return current.some(index =>(currentPosition +index+1) % width === 0 )
+  }
+
+  function isAtLeft() {
+    return current.some(index=> (currentPosition + index) % width === 0)
+  }
+
+  function checkRotatedPosition(P) {
+    P = P || currentPosition //get current position.  Then, check if the piece is near the left side.
+    if ((P + 1) % width < 4 ) {
+        if (isAtRight()){
+            currentPosition += 1 
+            checkRotatedPosition(P)
+        }
+    }
+    else if (P % width > 5 ){ 
+        if (isAtLeft()){
+            currentPosition -= 1
+            checkRotatedPosition(P)
+        }
+    }
+  }
+  //rotate the tetromino 
+  function rotate() {
+    undraw()
+    currentRotation ++ 
+    if(currentRotation===current.length) { //if the current rotation gets to 4, make it go back to 0
+        currentRotation = 0
+    }
+    current = theTetrominoes[random][currentRotation]
+    checkRotatedPosition()
+    draw()
+  }
+})
