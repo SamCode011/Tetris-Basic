@@ -197,13 +197,11 @@ function moveright() {
      square.style.backgroundColor = ''
    })
    upNextTetrominoes[nextRandom].forEach(index => {
-       const currentIndex = displayIndex + index;
-       if (currentIndex < displaySquares.length) {
-         displaySquares[currentIndex].classList.add('tetromino')
-         displaySquares[currentIndex].style.backgroundColor = colors[nextRandom]
-  }
-})
- }
+       displaySquares[displayIndex + index].classList.add('tetromino')
+       displaySquares[displayIndex +index].style.backgroundColor = colors[nextRandom]
+  })
+}
+
  //add functionality to the button
  startBtn.addEventListener('click', () => {
    if (timerId) {
